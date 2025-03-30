@@ -7,20 +7,28 @@ import pandas as pd
 import random
 
 def generator(studenci:dict, 
-              sciezka_studenci:str = config.sciezka_studenci) -> None:
+              sciezka_studenci:str = config.sciezka_studenci,
+              sciezka_pytania:str = config.sciezka_pytania,
+              sciezka_docelowa:str = config.sciezka_docelowa) -> None:
     '''
     Funkcja generująca kolokwium.
 
     Args:
-    sciezka_studenci (str): ścieżka do pliku z uczniami
     studenci (dict): słownik z uczniami i wylosowanymi pytaniami
+    sciezka_studenci (str): ścieżka do pliku z uczniami
+    sciezka_pytania (str): ścieżka do pliku z rodzajami pytan
+
 
     Returns:
     None
     '''
-    json_data = json.load(open('kolos.ipynb'))
+    file = open('kolos.ipynb',"r")
 
-    print(json_data["cells"][0]["source"])
+    calosc = file.read()
+
+    for i in 
+    
+    # zrób liste zadań i podziel plik i na zmiane iteracyjnie dla elementów splita pliku dodawaj stringi
 
 
 def losowanie(tryb:str, 
@@ -66,4 +74,4 @@ def losowanie(tryb:str,
 
 
 if __name__ == "__main__":
-    losowanie("grupy", 4)
+    generator({})
