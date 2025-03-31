@@ -4,7 +4,9 @@ import config
 import pandas as pd
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory
+import time
 
+tk.Tk().withdraw()
 
 def clear():
     # for windows
@@ -19,7 +21,7 @@ def main() -> None:
     '''
     Główna funkcja programu. Odopowaida za menu główne i obsługę terminala.
     '''
-    print("Generator kolokwiów!E\n")
+    print("Generator kolokwiów!\n")
     print("Mój program generuje kolokwia. Potrzebuje do tego 3 pliki.")
     print("1. Plik z szablonem kolokwium. \nTo plik .ipynb który w miejscach które mają się zmieniać dla grup/studentów ma napisane:\n `Zadanie tutaj`\n")
     print("2. Plik z rodzajami zadań. \nNa każde miejsce `Zadanie tutaj` przypadać powinno przynajmniej 1 zadanie.\n Przykładowo:")
@@ -47,19 +49,50 @@ def main() -> None:
         case "e"|"E":
             print("Do widzenia!")
             sys.exit(0)
+        case _:
+            main()
     
 
 def manualne():
+    clear()
     print("Manualne generowanie kolokwiów")
     print("")
-    print("Podaj ścieżkę do szablonu kolokwium.")
-    tk.Tk().withdraw() # część importu, jeśli nie używasz innych funkcji tkinter
-    fn = askopenfilename()
-    print("użytkownik wybrał", fn)
+    zbieranie_danych()
+
+    
+
     pass
 
 def automatyczne():
     pass
+
+def zbieranie_danych():
+    sciezka_szablonu = ''
+    sciezka_pytania = ''
+    sciezka_studenci = ''
+    sciezka_docelowa = ''
+    print("Podaj ścieżkę do szablonu kolokwium.\n")
+    while sciezka_szablonu != '':
+        time.sleep(0.5)
+        sciezka_szablonu = askopenfilename(filetypes=[("Jupyter Notebook","*.ipynb")], title="Wybierz szablon kolokwim")
+
+    print("Podaj ścieżkę do pliku z pytaniami (.csv)\n")
+    while sciezka_pytania != '':
+        time.sleep(0.5)
+        sciezka_pytania = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik z pytaniami")
+
+    print("Podaj ścieżkę do pliku ze studentami (.csv)\n")
+    while sciezka_studenci != '':
+        time.sleep(0.5)
+        sciezka_studenci = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik ze studentami")
+
+    print("Podaj folder docelową wygenerowanych kolokwiów\n")
+    while sciezka_docelowa != '':
+        time.sleep(0.5)
+        sciezka_docelowa = askdirectory(title="Wybierz plik ze studentami")
+
+    print()
+
 
 if __name__ == "__main__":
     main()

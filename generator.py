@@ -133,7 +133,7 @@ def sprawdzanie_plikow(sciezka_studenci:str,
     return studenci, pytania
 
 if __name__ == "__main__":
-    # generator(losowanie("grupy", 4))
-    losowanie("grupy", 4)
+    generator(losowanie("grupy", 4))
+    #losowanie("grupy", 4)
     
     # sprawdzanie_plikow()
