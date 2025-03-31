@@ -38,7 +38,7 @@ def generator(studenci:dict,
 
     for uczen in tqdm(list(studenci.keys())[:ilosc_studentow], "Generowanie studentów: ",):
         #wykrywanie systemu i tworzenie ścieżki pliku
-        time.sleep(0.1)
+        time.sleep(0.01)
         if platform == "win32":
             sciezka_tmp = sciezka_docelowa+"\\"+uczen+".ipynb"
         else:
@@ -69,19 +69,14 @@ def losowanie(tryb:str,
     dict:
         uczen: [lista pytań z pliku csv]
     '''
-
-    # studenci = pd.read_csv(sciezka_studenci, sep=';')
-    # pytania = pd.read_csv(sciezka_pytania, sep=';')
-
-    studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
     
-    # print(studenci, pytania.columns)
+    studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
 
     wylosowane_pytania = {}
     if tryb == "bez":
         wylosowane_pytania = {row['imie'] + "_" + row['nazwisko']: [random.choice(pytania[i]) for i in pytania.columns] for _, row in studenci.iterrows()}
     else:
-        grupy = {} #_: [random.choice(pytania[i]) for i in pytania.columns] 
+        grupy = {}
         
         for i in pytania.columns:
             for index, pytanie in enumerate(random.sample(sorted(pytania[i]), ilosc_grup), 1):
@@ -130,7 +125,7 @@ def sprawdzanie_plikow(sciezka_studenci:str,
 
 
 if __name__ == "__main__":
-    generator(losowanie("grupy", 4),5)
+    generator(losowanie("grupy", 4))
     # losowanie("grupy", 4)
     
     # sprawdzanie_plikow()
