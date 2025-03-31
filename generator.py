@@ -8,6 +8,7 @@ import random
 from sys import platform
 from tqdm import tqdm
 import time
+from io import StringIO
 
 def generator(studenci:dict, 
               ilosc_studentow:int = None,
@@ -53,7 +54,6 @@ def generator(studenci:dict,
             kolos.write(wnetrze)
 
 
-
 def losowanie(tryb:str, 
               ilosc_grup:int = 0, 
               sciezka_studenci:str = config.sciezka_studenci, 
@@ -73,10 +73,13 @@ def losowanie(tryb:str,
         uczen: [lista pytań z pliku csv]
     '''
 
-    studenci = pd.read_csv(sciezka_studenci, sep=';')
-    pytania = pd.read_csv(sciezka_pytania, sep=';')
+    # studenci = pd.read_csv(sciezka_studenci, sep=';')
+    # pytania = pd.read_csv(sciezka_pytania, sep=';')
 
+    studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
     
+    # print(studenci, pytania.columns)
+
     wylosowane_pytania = {}
     if tryb == "bez":
         wylosowane_pytania = {row['imie'] + "_" + row['nazwisko']: [random.choice(pytania[i]) for i in pytania.columns] for _, row in studenci.iterrows()}
@@ -84,13 +87,12 @@ def losowanie(tryb:str,
         grupy = {} #_: [random.choice(pytania[i]) for i in pytania.columns] 
         
         for i in pytania.columns:
-
-
             for index, pytanie in enumerate(random.sample(sorted(pytania[i]), ilosc_grup), 1):
                 try:
                     grupy[index].append(pytanie)
                 except KeyError:
                     grupy[index] = [pytanie]
+        print(grupy)
 
         id_grupy = 1
         for _, row in studenci.iterrows():
@@ -101,10 +103,38 @@ def losowanie(tryb:str,
     
     return wylosowane_pytania
 
+def sprawdzanie_plikow(sciezka_studenci:str, 
+                        sciezka_pytania:str):
+    '''
+    Funkcja sprawdzająca pliki.
+    Przekształca backslashe w pytaniach na \\.
 
-def 
+    Args:
+    sciezka_studenci (str): ścieżka do pliku z uczniami
+    sciezka_pytania (str): ścieżka do pliku z rodzajami pytan
+
+    Returns:
+    liste obrobionych pytań takich jak read_csv
+    '''
+    with open(sciezka_pytania, "r") as pytania:
+        pytania = pytania.read()
+        pytania = pytania.replace("\\\\", "\\")
+        pytania = pytania.replace("\\", "\\\\")
+
+    # studenci = pd.read_csv(sciezka_studenci, sep=';')
+    pytania = pd.read_csv(StringIO(pytania), sep=';')
+
+    studenci = pd.read_csv(sciezka_studenci, sep=';')
+
+    return studenci, pytania
+    
+
+
+
 
 
 if __name__ == "__main__":
-    generator(losowanie("grupy", 4),4)
+    # generator(losowanie("grupy", 4),4)
+    losowanie("grupy", 4)
     
+    sprawdzanie_plikow()
