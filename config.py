@@ -6,9 +6,9 @@ import os
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory
 
-sciezka_studenci = 'studenci.csv'
-sciezka_pytania = 'grupy.csv'
-sciezka_szablonu = 'kolos.ipynb'
+sciezka_studenci = 'example/studenci.csv'
+sciezka_pytania = 'example/grupy.csv'
+sciezka_szablonu = 'example/kolos.ipynb'
 sciezka_docelowa = 'wygenerowane'
 
 

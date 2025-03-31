@@ -79,11 +79,24 @@ def losowanie(tryb:str,
         grupy = {}
         
         for i in pytania.columns:
-            for index, pytanie in enumerate(random.sample(sorted(pytania[i]), ilosc_grup), 1):
-                try:
-                    grupy[index].append(pytanie)
-                except KeyError:
-                    grupy[index] = [pytanie]
+            pula_pytan = pytania[i].dropna() #sprawdzanie czy nie jest niczym
+            # zabezpieczenie przed błędem sample
+            # jeśli ilosc grup jest większa niż pula pytań to pytania będą się powtarzały
+            if len(pula_pytan)>ilosc_grup:
+                for index, pytanie in enumerate(random.sample(sorted(pula_pytan), ilosc_grup), 1):
+                    try:
+                        grupy[index].append(pytanie)
+                    except KeyError:
+                        grupy[index] = [pytanie]
+            else:
+                index = 0
+                for pytanie in pula_pytan:
+                    if index > ilosc_grup: index=0
+                    try:
+                        grupy[index].append(pytanie)
+                    except KeyError:
+                        grupy[index] = [pytanie]
+                    index+=1
 
         id_grupy = 1
         for _, row in studenci.iterrows():
@@ -118,14 +131,9 @@ def sprawdzanie_plikow(sciezka_studenci:str,
     studenci = pd.read_csv(sciezka_studenci, sep=';')
 
     return studenci, pytania
-    
-
-
-
-
 
 if __name__ == "__main__":
-    generator(losowanie("grupy", 4))
-    # losowanie("grupy", 4)
+    # generator(losowanie("grupy", 4))
+    losowanie("grupy", 4)
     
     # sprawdzanie_plikow()
