@@ -5,10 +5,13 @@ import json
 import config 
 import pandas as pd
 import random
+from sys import platform
+from tqdm import tqdm
+import time
 
 def generator(studenci:dict, 
-              sciezka_studenci:str = config.sciezka_studenci,
-              sciezka_pytania:str = config.sciezka_pytania,
+              ilosc_studentow:int = None,
+              sciezka_szablonu:str = config.sciezka_szablonu,
               sciezka_docelowa:str = config.sciezka_docelowa) -> None:
     '''
     Funkcja generująca kolokwium.
@@ -22,13 +25,33 @@ def generator(studenci:dict,
     Returns:
     None
     '''
-    file = open('kolos.ipynb',"r")
+    if ilosc_studentow == None:
+        ilosc_studentow = len(studenci.keys())
 
-    calosc = file.read()
+    #otwieranie potrzebnych plików
+    file = open(sciezka_szablonu,"r")
 
-    for i in 
+    calosc = file.read() #otwarcie szablonu do zmiennej
+
     
-    # zrób liste zadań i podziel plik i na zmiane iteracyjnie dla elementów splita pliku dodawaj stringi
+
+    for uczen in tqdm(list(studenci.keys())[:ilosc_studentow], "Generowanie studentów: ",):
+        #wykrywanie systemu i tworzenie ścieżki pliku
+        time.sleep(0.1)
+        if platform == "win32":
+            sciezka_tmp = sciezka_docelowa+"\\"+uczen+".ipynb"
+        else:
+            sciezka_tmp = sciezka_docelowa+"/"+uczen+".ipynb"
+        wnetrze = calosc
+
+        print(uczen)
+        print(studenci[uczen])
+
+        with open(f"{sciezka_tmp}", "w") as kolos:
+            for i in studenci[uczen]:
+                wnetrze = wnetrze.replace("Zadanie tutaj", str(i), 1)
+            kolos.write(wnetrze)
+
 
 
 def losowanie(tryb:str, 
@@ -47,7 +70,7 @@ def losowanie(tryb:str,
     
     Returns:
     dict:
-        uczen: [lista indexów pytań w pliku csv]
+        uczen: [lista pytań z pliku csv]
     '''
 
     studenci = pd.read_csv(sciezka_studenci, sep=';')
@@ -56,22 +79,32 @@ def losowanie(tryb:str,
     
     wylosowane_pytania = {}
     if tryb == "bez":
-        wylosowane_pytania = {row['imie'] + " " + row['nazwisko']: [random.choice(pytania[i]) for i in pytania.columns] for _, row in studenci.iterrows()}
+        wylosowane_pytania = {row['imie'] + "_" + row['nazwisko']: [random.choice(pytania[i]) for i in pytania.columns] for _, row in studenci.iterrows()}
     else:
-        grupy = {_: [random.choice(pytania[i]) for i in pytania.columns] for _ in range(1, ilosc_grup+1)}
+        grupy = {} #_: [random.choice(pytania[i]) for i in pytania.columns] 
         
+        for i in pytania.columns:
+
+
+            for index, pytanie in enumerate(random.sample(sorted(pytania[i]), ilosc_grup), 1):
+                try:
+                    grupy[index].append(pytanie)
+                except KeyError:
+                    grupy[index] = [pytanie]
+
         id_grupy = 1
         for _, row in studenci.iterrows():
             if id_grupy > ilosc_grup:
                 id_grupy = 1
-            wylosowane_pytania[row['imie'] + " " + row['nazwisko']] = grupy[id_grupy]
+            wylosowane_pytania[row['imie'] + "_" + row['nazwisko']] = grupy[id_grupy]
             id_grupy+=1
     
     return wylosowane_pytania
 
 
-
+def 
 
 
 if __name__ == "__main__":
-    generator({})
+    generator(losowanie("grupy", 4),4)
+    
