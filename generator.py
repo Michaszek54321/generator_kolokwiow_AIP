@@ -45,9 +45,6 @@ def generator(studenci:dict,
             sciezka_tmp = sciezka_docelowa+"/"+uczen+".ipynb"
         wnetrze = calosc
 
-        print(uczen)
-        print(studenci[uczen])
-
         with open(f"{sciezka_tmp}", "w") as kolos:
             for i in studenci[uczen]:
                 wnetrze = wnetrze.replace("Zadanie tutaj", str(i), 1)
@@ -92,7 +89,6 @@ def losowanie(tryb:str,
                     grupy[index].append(pytanie)
                 except KeyError:
                     grupy[index] = [pytanie]
-        print(grupy)
 
         id_grupy = 1
         for _, row in studenci.iterrows():
@@ -134,7 +130,7 @@ def sprawdzanie_plikow(sciezka_studenci:str,
 
 
 if __name__ == "__main__":
-    # generator(losowanie("grupy", 4),4)
-    losowanie("grupy", 4)
+    generator(losowanie("grupy", 4),5)
+    # losowanie("grupy", 4)
     
-    sprawdzanie_plikow()
+    # sprawdzanie_plikow()
