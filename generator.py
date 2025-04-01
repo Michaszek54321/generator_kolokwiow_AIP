@@ -11,9 +11,9 @@ import time
 from io import StringIO
 
 def generator(studenci:dict, 
-              ilosc_studentow:int = None,
-              sciezka_szablonu:str = config.sciezka_szablonu,
-              sciezka_docelowa:str = config.sciezka_docelowa) -> None:
+              ilosc_studentow:int|str = 0,
+              sciezka_szablonu:str = config.sciezka_szablonu_ex,
+              sciezka_docelowa:str = config.sciezka_docelowa_ex) -> None:
     '''
     Funkcja generująca kolokwium.
 
@@ -27,8 +27,15 @@ def generator(studenci:dict,
     None
     '''
     # zabezpiecza przed zmianą ilości studentów
-    if ilosc_studentow == None or ilosc_studentow>len(studenci.keys()):
+    if ilosc_studentow == 0:
         ilosc_studentow = len(studenci.keys())
+    try:
+        ilosc_studentow = int(ilosc_studentow)
+        if ilosc_studentow>len(studenci.keys()):
+            ilosc_studentow = len(studenci.keys())
+    except ValueError or TypeError:
+        ilosc_studentow = len(studenci.keys())
+
 
     #otwieranie potrzebnych plików
     file = open(sciezka_szablonu,"r")
@@ -51,9 +58,9 @@ def generator(studenci:dict,
 
 
 def losowanie(tryb:str, 
-              ilosc_grup:int = 0, 
-              sciezka_studenci:str = config.sciezka_studenci, 
-              sciezka_pytania:str = config.sciezka_pytania) -> dict:
+              ilosc_grup:int|str = 0, 
+              sciezka_studenci:str = config.sciezka_studenci_ex, 
+              sciezka_pytania:str = config.sciezka_pytania_ex) -> dict:
     '''
     Funkcja losująca pytania. 
     W zależności od trybu albo z grupami albo bez.
@@ -71,8 +78,11 @@ def losowanie(tryb:str,
     '''
     
     studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
-
-    if ilosc_grup==0 or isinstance(ilosc_grup, int)==False:
+    try:
+        ilosc_grup = int(ilosc_grup)
+        if ilosc_grup==0:
+            ilosc_grup = recom_group_count(sciezka_studenci)
+    except ValueError:
         ilosc_grup = recom_group_count(sciezka_studenci)
 
     wylosowane_pytania = {}
@@ -100,6 +110,8 @@ def losowanie(tryb:str,
                     except KeyError:
                         grupy[index] = [pytanie]
                     index+=1
+        
+        print(grupy)
 
         id_grupy = 1
         for _, row in studenci.iterrows():

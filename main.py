@@ -71,27 +71,34 @@ def main() -> None:
             if nested_choice == "BEZ":
                 studenci = gen.losowanie("BEZ", 0, sciezka_studenci, sciezka_pytania)
                 ilosc_grup = 0
+                tmp_config["tryb"] = nested_choice
             else:
                 print("Wpisz ilość grup: ")
                 print(f"Zalecana ilosc grup to {gen.recom_group_count(sciezka_studenci)}")
                 ilosc_grup = input("")
                 studenci = gen.losowanie("grupy", ilosc_grup, sciezka_studenci, sciezka_pytania)
+                tmp_config["tryb"] = "GRUPY"
             
-            tmp_config["tryb"] = nested_choice
-            tmp_config["ilosc_grup"] = ilosc_grup
+            if ilosc_grup==0:
+                tmp_config["ilosc_grup"] = "rekomendowana"
+            else:
+                tmp_config["ilosc_grup"] = ilosc_grup
 
             print("Czy wygenerować kolokwia dla wszystkich studentów na liście? (Y/N)")
             nested_choice = ""
             while nested_choice=="":
                 nested_choice = input("")
             if nested_choice == "Y" or nested_choice =="y":
-                ilosc = None
-                gen.generator(studenci, None, sciezka_szablonu, sciezka_docelowa)
+                ilosc = 0
+                gen.generator(studenci, 0, sciezka_szablonu, sciezka_docelowa)
             else:
                 ilosc = input("Podaj ilość: ")
                 gen.generator(studenci, ilosc, sciezka_szablonu, sciezka_docelowa)
             
-            tmp_config["ilosc_studentow"] = ilosc
+            if ilosc_studentow == 0:
+                tmp_config["ilosc_studentow"] = "wszyscy"
+            else:
+                tmp_config["ilosc_studentow"] = ilosc
 
             print("Gotowe!")
             print("Wpisz cokolwiek aby wrócić do menu głównego.")
@@ -121,9 +128,14 @@ def main() -> None:
                     nested_choice = input("")
                 if nested_choice == "Y" or nested_choice =="y":
                     print("Wpisz ilość grup: ")
+                    print(f"Ostatnia ilość grup to: {config.ilosc_grup}")
                     ilosc_grup = input("")
-                    studenci = gen.losowanie(config.tryb, ilosc_grup)
-                    gen.generator(studenci, config.ilosc_studentow)
+                    studenci = gen.losowanie(config.tryb, ilosc_grup, config.sciezka_studenci, config.sciezka_pytania)
+
+                    print("Wpisz ilość studentów: ")
+                    print(f"Ostatnia ilość grup to: {config.ilosc_studentow}")
+                    ilosc_studentow = input("")
+                    gen.generator(studenci, ilosc_studentow, config.sciezka_szablonu, config.sciezka_docelowa)
 
                     print("Gotowe!")
                     print("Wpisz cokolwiek aby wrócić do menu głównego.")
@@ -133,9 +145,6 @@ def main() -> None:
                     print("Wpisz cokolwiek aby wrócić do menu głównego.")
                     input("")
                     main()
-
-
-            
         case "e"|"E":
             print("Do widzenia!")
             sys.exit(0)
@@ -148,33 +157,40 @@ def zbieranie_danych():
     sciezka_pytania = ''
     sciezka_studenci = ''
     sciezka_docelowa = ''
-    print("Wybierz ścieżkę do szablonu kolokwium.\n")
+    print("Wybierz ścieżkę do szablonu kolokwium.")
     while sciezka_szablonu == '':
         time.sleep(1)
         sciezka_szablonu = askopenfilename(filetypes=[("Jupyter Notebook","*.ipynb")], title="Wybierz szablon kolokwim")
         print(sciezka_szablonu)
+        print()
 
-    print("Wybierz ścieżkę do pliku z pytaniami (.csv)\n")
+    print("Wybierz ścieżkę do pliku z pytaniami (.csv)")
     while sciezka_pytania == '':
         time.sleep(1)
         sciezka_pytania = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik z pytaniami")
         print(sciezka_pytania)
+        print()
 
-    print("Wybierz ścieżkę do pliku ze studentami (.csv)\n")
+    print("Wybierz ścieżkę do pliku ze studentami (.csv)")
     while sciezka_studenci == '':
         time.sleep(1)
         sciezka_studenci = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik ze studentami")
         print(sciezka_studenci)
+        print()
 
-    print("Wybierz folder docelowy wygenerowanych kolokwiów\n")
+    print("Wybierz folder docelowy wygenerowanych kolokwiów")
     while sciezka_docelowa == '':
         time.sleep(1)
         sciezka_docelowa = askdirectory(title="Wybierz plik ze studentami")
         print(sciezka_docelowa)
+        print()
 
-    print()
-
-    return sciezka_szablonu, sciezka_pytania, sciezka_studenci, sciezka_docelowa
+    print("Czy chcesz powtórzyć? (Y/N)")
+    nested_choice = input("")
+    if nested_choice == "Y" or nested_choice =="y":
+        return zbieranie_danych()
+    else:
+        return sciezka_szablonu, sciezka_pytania, sciezka_studenci, sciezka_docelowa
 
 
 if __name__ == "__main__":

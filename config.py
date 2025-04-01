@@ -12,10 +12,14 @@ config = configparser.ConfigParser()
 if os.name == 'nt':
     sciezka_studenci_ex = 'example\studenci.csv'
     sciezka_pytania_ex = 'example\grupy.csv'
+    sciezka_szablonu_ex = 'example\kolos.ipynb'
+    sciezka_docelowa_ex = 'wygenerowane'
 else:
     # for mac and linux
     sciezka_studenci_ex = "example/studenci.csv"
     sciezka_pytania_ex = "example/grupy.csv"
+    sciezka_szablonu_ex = 'example/kolos.ipynb'
+    sciezka_docelowa_ex = 'wygenerowane'
 
 
 if os.path.isfile("config.ini") == False:
@@ -33,6 +37,16 @@ def make_config(tmp_config:dict):
     config['ostatnia_konfiguracja'] = tmp_config
     with open("config.ini", "w") as configfile:
         config.write(configfile)
+        
+    global sciezka_studenci, sciezka_pytania, sciezka_szablonu, sciezka_docelowa, ilosc_grup, tryb, ilosc_studentow, ostatnia_dict
+    sciezka_studenci = tmp_config.get('sciezka_studenci', sciezka_studenci)
+    sciezka_pytania = tmp_config.get('sciezka_pytania', sciezka_pytania)
+    sciezka_szablonu = tmp_config.get('sciezka_szablonu', sciezka_szablonu)
+    sciezka_docelowa = tmp_config.get('sciezka_docelowa', sciezka_docelowa)
+    ilosc_grup = tmp_config.get('ilosc_grup', ilosc_grup)
+    tryb = tmp_config.get('tryb', tryb)
+    ilosc_studentow = tmp_config.get('ilosc_studentow', ilosc_studentow)
+    ostatnia_dict = tmp_config
 
 config.read('config.ini')
 try:
@@ -43,7 +57,7 @@ try:
     ilosc_grup = config['ostatnia_konfiguracja']['ilosc_grup']
     tryb = config['ostatnia_konfiguracja']['tryb']
     ilosc_studentow = config['ostatnia_konfiguracja']['ilosc_studentow']
-    
+
     ostatnia_dict = dict(config.items('ostatnia_konfiguracja'))
 except KeyError:
     sciezka_studenci = ''
