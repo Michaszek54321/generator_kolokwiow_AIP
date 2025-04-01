@@ -26,7 +26,7 @@ def generator(studenci:dict,
     Returns:
     None
     '''
-    if ilosc_studentow == None:
+    if ilosc_studentow == None or ilosc_studentow>len(studenci.keys()):
         ilosc_studentow = len(studenci.keys())
 
     #otwieranie potrzebnych plików

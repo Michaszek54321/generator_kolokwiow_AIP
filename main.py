@@ -5,10 +5,13 @@ import pandas as pd
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory
 import time
+import generator as gen
+import keyboard
 
 tk.Tk().withdraw()
 
 def clear():
+    '''Funkcja czyszcząca terminal'''
     # for windows
     if os.name == 'nt':
         _ = os.system('cls')
@@ -21,6 +24,14 @@ def main() -> None:
     '''
     Główna funkcja programu. Odopowaida za menu główne i obsługę terminala.
     '''
+    sciezka_szablonu = ''
+    sciezka_pytania = ''
+    sciezka_studenci = ''
+    sciezka_docelowa = ''
+    studenci = {}
+
+
+
     print("Generator kolokwiów!\n")
     print("Mój program generuje kolokwia. Potrzebuje do tego 3 pliki.")
     print("1. Plik z szablonem kolokwium. \nTo plik .ipynb który w miejscach które mają się zmieniać dla grup/studentów ma napisane:\n `Zadanie tutaj`\n")
@@ -39,8 +50,29 @@ def main() -> None:
     clear()
     match wybor:
         case "1":
+            nested_choice = ""
+            clear()
             print("Manualne generowanie kolokwiów")
-            manualne()
+            print("")
+            sciezka_szablonu, sciezka_pytania, sciezka_studenci, sciezka_docelowa = zbieranie_danych()
+
+            studenci = gen.losowanie("grupy", 4, sciezka_studenci, sciezka_pytania)
+
+            print("Czy wygenerować kolokwia dla wszystkich studentów na liście? (Y/N)")
+            while nested_choice=="":
+                nested_choice = input("")
+            if nested_choice == "Y" or nested_choice =="y":
+                gen.generator(studenci, None, sciezka_szablonu, sciezka_docelowa)
+            else:
+                ilosc = input("Podaj ilość: ")
+                gen.generator(studenci, ilosc, sciezka_szablonu, sciezka_docelowa)
+
+            print("Gotowe!")
+            print("Kliknij Enter aby wrócić do menu głównego.")
+            if keyboard.is_pressed('enter'):
+                main()
+
+
 
         case "2":
             print("Automatyczne generowanie kolokwiów")
@@ -53,11 +85,13 @@ def main() -> None:
             main()
     
 
-def manualne():
+def manualne(sciezka_studenci):
     clear()
     print("Manualne generowanie kolokwiów")
     print("")
     zbieranie_danych()
+
+    studenci = gen.losowanie("grupy", 4, sciezka_studenci, )
 
     
 
@@ -72,26 +106,28 @@ def zbieranie_danych():
     sciezka_studenci = ''
     sciezka_docelowa = ''
     print("Podaj ścieżkę do szablonu kolokwium.\n")
-    while sciezka_szablonu != '':
+    while sciezka_szablonu == '':
         time.sleep(0.5)
         sciezka_szablonu = askopenfilename(filetypes=[("Jupyter Notebook","*.ipynb")], title="Wybierz szablon kolokwim")
 
     print("Podaj ścieżkę do pliku z pytaniami (.csv)\n")
-    while sciezka_pytania != '':
+    while sciezka_pytania == '':
         time.sleep(0.5)
         sciezka_pytania = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik z pytaniami")
 
     print("Podaj ścieżkę do pliku ze studentami (.csv)\n")
-    while sciezka_studenci != '':
+    while sciezka_studenci == '':
         time.sleep(0.5)
         sciezka_studenci = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik ze studentami")
 
     print("Podaj folder docelową wygenerowanych kolokwiów\n")
-    while sciezka_docelowa != '':
+    while sciezka_docelowa == '':
         time.sleep(0.5)
         sciezka_docelowa = askdirectory(title="Wybierz plik ze studentami")
 
     print()
+
+    return sciezka_szablonu, sciezka_pytania, sciezka_studenci, sciezka_docelowa
 
 
 if __name__ == "__main__":
