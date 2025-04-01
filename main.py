@@ -6,9 +6,10 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory
 import time
 import generator as gen
-import keyboard
 
 tk.Tk().withdraw()
+
+
 
 def clear():
     '''Funkcja czyszcząca terminal'''
@@ -29,7 +30,7 @@ def main() -> None:
     sciezka_studenci = ''
     sciezka_docelowa = ''
     studenci = {}
-
+    config = {}
 
 
     print("Generator kolokwiów!\n")
@@ -55,28 +56,52 @@ def main() -> None:
             print("Manualne generowanie kolokwiów")
             print("")
             sciezka_szablonu, sciezka_pytania, sciezka_studenci, sciezka_docelowa = zbieranie_danych()
+            config['sciezka_szablonu'] = sciezka_szablonu
+            config['sciezka_pytania'] = sciezka_pytania
+            config['sciezka_studenci'] = sciezka_studenci
+            config['sciezka_docelowa'] = sciezka_docelowa
 
-            studenci = gen.losowanie("grupy", 4, sciezka_studenci, sciezka_pytania)
+            print("Wybierz tryb")
+            print("'bez' - tryb bez grup")
+            print("'grupy' - tryb z grupami")
+            nested_choice = ""
+            while nested_choice=="":
+                nested_choice = input("").upper()
+            if nested_choice == "GRUPY":
+                print("Wpisz ilość grup: ")
+                print(f"Zalecana ilosc grup to {gen.recom_group_count(sciezka_studenci)}")
+                ilosc_grup = input("")
+                studenci = gen.losowanie("grupy", ilosc_grup, sciezka_studenci, sciezka_pytania)
+            else:
+                studenci = gen.losowanie("bez", 0, sciezka_studenci, sciezka_pytania)
+                ilosc_grup = 0
+            
+            config["tryb"] = nested_choice
+            config["ilosc_grup"] = ilosc_grup
 
             print("Czy wygenerować kolokwia dla wszystkich studentów na liście? (Y/N)")
+            nested_choice = ""
             while nested_choice=="":
                 nested_choice = input("")
             if nested_choice == "Y" or nested_choice =="y":
+                ilosc = None
                 gen.generator(studenci, None, sciezka_szablonu, sciezka_docelowa)
             else:
                 ilosc = input("Podaj ilość: ")
                 gen.generator(studenci, ilosc, sciezka_szablonu, sciezka_docelowa)
+            
+            config["ilosc_studentow"] = ilosc
 
             print("Gotowe!")
-            print("Kliknij Enter aby wrócić do menu głównego.")
-            if keyboard.is_pressed('enter'):
-                main()
-
-
+            print("Wpisz cokolwiek aby wrócić do menu głównego.")
+            input("")
+            main()
 
         case "2":
+            clear()
             print("Automatyczne generowanie kolokwiów")
-            automatyczne()
+            print("")
+            print("Automatyczne generowanie kolokwiów, pobiera ścieżki z poprzednich")
             
         case "e"|"E":
             print("Do widzenia!")
@@ -85,45 +110,34 @@ def main() -> None:
             main()
     
 
-def manualne(sciezka_studenci):
-    clear()
-    print("Manualne generowanie kolokwiów")
-    print("")
-    zbieranie_danych()
-
-    studenci = gen.losowanie("grupy", 4, sciezka_studenci, )
-
-    
-
-    pass
-
-def automatyczne():
-    pass
-
 def zbieranie_danych():
     sciezka_szablonu = ''
     sciezka_pytania = ''
     sciezka_studenci = ''
     sciezka_docelowa = ''
-    print("Podaj ścieżkę do szablonu kolokwium.\n")
+    print("Wybierz ścieżkę do szablonu kolokwium.\n")
     while sciezka_szablonu == '':
-        time.sleep(0.5)
+        time.sleep(1)
         sciezka_szablonu = askopenfilename(filetypes=[("Jupyter Notebook","*.ipynb")], title="Wybierz szablon kolokwim")
+        print(sciezka_szablonu)
 
-    print("Podaj ścieżkę do pliku z pytaniami (.csv)\n")
+    print("Wybierz ścieżkę do pliku z pytaniami (.csv)\n")
     while sciezka_pytania == '':
-        time.sleep(0.5)
+        time.sleep(1)
         sciezka_pytania = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik z pytaniami")
+        print(sciezka_pytania)
 
-    print("Podaj ścieżkę do pliku ze studentami (.csv)\n")
+    print("Wybierz ścieżkę do pliku ze studentami (.csv)\n")
     while sciezka_studenci == '':
-        time.sleep(0.5)
+        time.sleep(1)
         sciezka_studenci = askopenfilename(filetypes=[("CSV file","*.csv")], title="Wybierz plik ze studentami")
+        print(sciezka_studenci)
 
-    print("Podaj folder docelową wygenerowanych kolokwiów\n")
+    print("Wybierz folder docelowy wygenerowanych kolokwiów\n")
     while sciezka_docelowa == '':
-        time.sleep(0.5)
+        time.sleep(1)
         sciezka_docelowa = askdirectory(title="Wybierz plik ze studentami")
+        print(sciezka_docelowa)
 
     print()
 

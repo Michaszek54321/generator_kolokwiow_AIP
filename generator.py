@@ -1,5 +1,5 @@
 '''
-Moduł `generator` będzie głównym modułem generującym kolokwia.
+Moduł `generator` jest głównym modułem generującym kolokwia.
 '''
 import json
 import config 
@@ -33,8 +33,6 @@ def generator(studenci:dict,
     file = open(sciezka_szablonu,"r")
 
     calosc = file.read() #otwarcie szablonu do zmiennej
-
-    
 
     for uczen in tqdm(list(studenci.keys())[:ilosc_studentow], "Generowanie studentów: ",):
         #wykrywanie systemu i tworzenie ścieżki pliku
@@ -71,6 +69,9 @@ def losowanie(tryb:str,
     '''
     
     studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
+
+    if ilosc_grup==0 or isinstance(ilosc_grup, int)==False:
+        ilosc_grup = recom_group_count(sciezka_studenci)
 
     wylosowane_pytania = {}
     if tryb == "bez":
@@ -132,8 +133,18 @@ def sprawdzanie_plikow(sciezka_studenci:str,
 
     return studenci, pytania
 
+def recom_group_count(sciezka_studenci:str):
+    '''Funkcja zwracająca zalecaną ilosc grup'''
+    studenci = pd.read_csv(sciezka_studenci, sep=';')
+    count = len(studenci["imie"])
+    if count<3:
+        return count
+    for i in range(3, count+1):
+        if count%i==0:
+            return i
+
 if __name__ == "__main__":
-    generator(losowanie("grupy", 4))
-    #losowanie("grupy", 4)
-    
+    # generator(losowanie("grupy", 4))
+    losowanie("grupy", 4)
     # sprawdzanie_plikow()
+    print(recom_group_count(config.sciezka_studenci))
