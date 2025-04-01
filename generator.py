@@ -26,6 +26,7 @@ def generator(studenci:dict,
     Returns:
     None
     '''
+    # zabezpiecza przed zmianą ilości studentów
     if ilosc_studentow == None or ilosc_studentow>len(studenci.keys()):
         ilosc_studentow = len(studenci.keys())
 
@@ -62,10 +63,11 @@ def losowanie(tryb:str,
     ilosc_grup (int): ilość grup do losowania
     sciezka_studenci (str): ścieżka do pliku z uczniami
     sciezka_pytania (str): ścieżka do pliku z rodzajami pytan
-    
-    Returns:
-    dict:
-        uczen: [lista pytań z pliku csv]
+
+
+    Returns
+        dict:
+            uczen: [lista pytań z pliku csv]
     '''
     
     studenci, pytania = sprawdzanie_plikow(sciezka_studenci, sciezka_pytania)
@@ -74,7 +76,7 @@ def losowanie(tryb:str,
         ilosc_grup = recom_group_count(sciezka_studenci)
 
     wylosowane_pytania = {}
-    if tryb == "bez":
+    if tryb == "BEZ":
         wylosowane_pytania = {row['imie'] + "_" + row['nazwisko']: [random.choice(pytania[i]) for i in pytania.columns] for _, row in studenci.iterrows()}
     else:
         grupy = {}
