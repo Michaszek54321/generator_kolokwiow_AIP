@@ -185,6 +185,34 @@ def zbieranie_danych():
         print(sciezka_docelowa)
         print()
 
+    klucze_pytan = pd.read_csv(sciezka_pytania, sep=';').keys()
+
+    if '1' in klucze_pytan:
+        print("Plik z pytaniami jest OK")
+        print()
+    else:
+        print("Kolumny muszą nazywać się numerem zadania")
+        print("Wybierz plik z poprawną składnią")
+        return zbieranie_danych()
+
+    if 'imie' and 'nazwisko' in pd.read_csv(sciezka_studenci, sep=';').keys():
+        print("Plik z studentami jest OK")
+        print()
+    else:
+        print("Kolumny muszą nazywać się imie i nazwisko")
+        print("Wybierz plik z poprawną składnią")
+        return zbieranie_danych()
+    
+    with open(sciezka_szablonu, "r") as szablon:
+        ilosc_miejsc = szablon.read().count("Zadanie tutaj")
+        if ilosc_miejsc != len(klucze_pytan):
+            print("W tym szablonie nie ma wystarczającej ilości miejsc w które wchodzą pytania")
+            print(f"Ilosc miejsc 'Zadanie tutaj': {ilosc_miejsc}")
+            print(f"Ilosc zadań przekazanych: {len(klucze_pytan)}")
+            print("Wybierz plik z poprawną składnią")
+            print()
+            return zbieranie_danych()
+
     print("Czy chcesz powtórzyć? (Y/N)")
     nested_choice = input("")
     if nested_choice == "Y" or nested_choice =="y":
