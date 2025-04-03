@@ -89,16 +89,16 @@ def main() -> None:
             while nested_choice=="":
                 nested_choice = input("")
             if nested_choice == "Y" or nested_choice =="y":
-                ilosc = 0
+                ilosc_studentow = 0
                 gen.generator(studenci, 0, sciezka_szablonu, sciezka_docelowa)
             else:
-                ilosc = input("Podaj ilość: ")
-                gen.generator(studenci, ilosc, sciezka_szablonu, sciezka_docelowa)
+                ilosc_studentow = input("Podaj ilość: ")
+                gen.generator(studenci, ilosc_studentow, sciezka_szablonu, sciezka_docelowa)
             
             if ilosc_studentow == 0:
                 tmp_config["ilosc_studentow"] = "wszyscy"
             else:
-                tmp_config["ilosc_studentow"] = ilosc
+                tmp_config["ilosc_studentow"] = ilosc_studentow
 
             print("Gotowe!")
             print("Wpisz cokolwiek aby wrócić do menu głównego.")
