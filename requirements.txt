@@ -1,0 +1,8 @@
+configparser
+os
+pandas
+random
+tqdm
+time
+io
+tkinter

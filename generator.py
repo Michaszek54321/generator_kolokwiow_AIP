@@ -1,7 +1,6 @@
 '''
 Moduł `generator` jest głównym modułem generującym kolokwia.
 '''
-import json
 import config 
 import pandas as pd
 import random
