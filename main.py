@@ -80,7 +80,7 @@ def main() -> None:
                 tmp_config["tryb"] = "GRUPY"
             
             if ilosc_grup==0:
-                tmp_config["ilosc_grup"] = "rekomendowana"
+                tmp_config["ilosc_grup"] = "Bez grup"
             else:
                 tmp_config["ilosc_grup"] = ilosc_grup
 
