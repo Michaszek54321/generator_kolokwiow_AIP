@@ -1,5 +1,5 @@
 '''
-Ten moduł będzie służył do wczytywania konfiguracji z pliku config.ini oraz jej tworzenia.
+Ten moduł służy do wczytywania konfiguracji z pliku config.ini oraz jej tworzenia.
 '''
 import configparser
 import os
@@ -34,6 +34,12 @@ if os.path.isfile("config.ini") == False:
         config.write(configfile)    
 
 def make_config(tmp_config:dict):
+    '''
+    Funkcja zapisująca konfigurację do pliku config.ini.
+
+    Args:
+        tmp_config (dict): słownik z konfiguracją
+    '''
     config['ostatnia_konfiguracja'] = tmp_config
     with open("config.ini", "w") as configfile:
         config.write(configfile)

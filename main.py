@@ -153,6 +153,9 @@ def main() -> None:
     
 
 def zbieranie_danych():
+    '''
+    Funkcja zbierająca ścieżki do plików.
+    '''
     sciezka_szablonu = ''
     sciezka_pytania = ''
     sciezka_studenci = ''
@@ -184,7 +187,7 @@ def zbieranie_danych():
     print("Wybierz folder docelowy wygenerowanych kolokwiów")
     while sciezka_docelowa == '':
         time.sleep(1)
-        sciezka_docelowa = askdirectory(title="Wybierz plik ze studentami")
+        sciezka_docelowa = askdirectory(title="Wybierz folder docelowy")
         print(sciezka_docelowa)
         print()
 

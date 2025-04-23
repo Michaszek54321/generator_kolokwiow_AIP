@@ -21,7 +21,6 @@ def generator(studenci:dict,
     sciezka_studenci (str): ścieżka do pliku z uczniami
     sciezka_pytania (str): ścieżka do pliku z rodzajami pytan
 
-
     Returns:
     None
     '''
