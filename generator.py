@@ -110,7 +110,6 @@ def losowanie(tryb:str,
                         grupy[index] = [pytanie]
                     index+=1
         
-        print(grupy)
 
         id_grupy = 1
         for _, row in studenci.iterrows():
