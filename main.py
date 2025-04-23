@@ -132,8 +132,8 @@ def main() -> None:
                     ilosc_grup = input("")
                     studenci = gen.losowanie(config.tryb, ilosc_grup, config.sciezka_studenci, config.sciezka_pytania)
 
-                    print("Wpisz ilość studentów: ")
-                    print(f"Ostatnia ilość grup to: {config.ilosc_studentow}")
+                    print("Wpisz ilość studentów (enter dla wszystkich): ")
+                    print(f"Ostatnia ilość studentów to: {config.ilosc_studentow}")
                     ilosc_studentow = input("")
                     gen.generator(studenci, ilosc_studentow, config.sciezka_szablonu, config.sciezka_docelowa)
 
@@ -164,6 +164,7 @@ def zbieranie_danych():
         print(sciezka_szablonu)
         print()
 
+    time.sleep(0.3)
     print("Wybierz ścieżkę do pliku z pytaniami (.csv)")
     while sciezka_pytania == '':
         time.sleep(1)
@@ -171,6 +172,7 @@ def zbieranie_danych():
         print(sciezka_pytania)
         print()
 
+    time.sleep(0.3)
     print("Wybierz ścieżkę do pliku ze studentami (.csv)")
     while sciezka_studenci == '':
         time.sleep(1)
@@ -178,6 +180,7 @@ def zbieranie_danych():
         print(sciezka_studenci)
         print()
 
+    time.sleep(0.3)
     print("Wybierz folder docelowy wygenerowanych kolokwiów")
     while sciezka_docelowa == '':
         time.sleep(1)
